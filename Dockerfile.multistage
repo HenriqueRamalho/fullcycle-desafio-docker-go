@@ -1,0 +1,12 @@
+FROM golang:1.8-alpine AS builder
+
+WORKDIR /go/src/app
+COPY . .
+
+RUN go get -d -v ./... \
+    && go install -v ./... \ 
+    && go build
+
+FROM scratch
+COPY --from=builder /go/bin/app /go/bin/app  
+ENTRYPOINT ["/go/bin/app"]
